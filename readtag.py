@@ -16,22 +16,41 @@ def port_list():
 # def query_start() {
 	
 # }
+def set_working_region(ser):
+	data = bytes.fromhex('BB 00 07 00 01 01 09 7E')
+	result = ser.write(data)
+	print("Set working region: China region 2")
+	# ser.flushInput()
+def set_working_power(ser):
+	data = bytes.fromhex('BB 00 B6 00 02 07 D0 8F 7E')
+	result = ser.write(data)
+	print("Set working power: 26/20dBm")
+	# ser.flushInput()
+
 def stop_multi_read(ser):
 	data = bytes.fromhex('BB 00 28 00 00 28 7E')
 	result = ser.write(data)#BB 00 27 00 03 22 27 10 83 7E
-	print("\nStopping Reading",result)
-	print("\nStop result: ")
-	print(ser.read().hex())
+	print("Stopping Reading")
+	print("Terminate-")
+	# print(ser.read(ser.in_waiting.hex()))
 
 def start_multi_read(ser):
 	data = bytes.fromhex('BB 00 27 00 03 22 FF FF 4A 7E')
-	result = ser.write(data)#BB 00 27 00 03 22 27 10 83 7E
-	print("Starting multi read: ", result)
+	result = ser.write(data)
+	print("Starting multi read: ")
+	# ser.flushInput()
 
 def start_single_read(ser):
 	data = bytes.fromhex('BB 00 22 00 00 22 7E')
 	result = ser.write(data)#BB 00 27 00 03 22 27 10 83 7E
-	print("Starting multi read: ", result)
+	print("Starting multi read: ")
+	# ser.flushInput()
+def get_working_power(ser):
+	data = bytes.fromhex('BB 00 B7 00 00 B7 7E')
+	ser.write(data)
+	print("Get working power")
+	# print(ser.read(50).hex())
+	# ser.flushInput()
 
 if __name__ == '__main__':
 	try:
@@ -41,58 +60,45 @@ if __name__ == '__main__':
 
 		ser=serial.Serial(port_reader, baud_rate, timeout=time_out)
 		print("\ndetailed information about the port:", ser)
-		# write
 		
-		# print(ser.read().hex())
-		# read
+		set_working_power(ser)
+		set_working_region(ser)
+		set_working_power(ser)
+
+		ser.flushInput()
+
 		start_multi_read(ser)
-		# stop_multi_read(ser)
 		
+		# get_working_power(ser)
+
+
 		while(1):
 			if ser.in_waiting:
 
-				# print(ser.in_waiting)
-				# Get header, type, command
-				# htcpl = ser.read(5).hex()
 				htcpl = ser.read(5).hex()
-				# command = htc[2:-2];
-				# if(len(response_msg)==16):
-					# print("no tag detected")
-				# elif(len(response_msg)>16):
-					# print("tt")
-
+			
 				pl = int(htcpl[6:10], 16)
+
 				print(htcpl)
-				
-				print("%d" % pl)
-				# print()
-				
-				# get parameter 
-				# parameter = str1[12:14]
-
-				# if((parameter == "15")):
-				# 	print("no tag detected")
-				# else:
-				# 	print(str1)
-				# 	print("\n", len(str1))
-
-
-				# time.sleep(1)
-				# ser.flushInput()
-			# data2= str(binascii.b2a_hex(ser.read(240)))
-			# print(data2)
-			# time.sleep(1)
-
-
-		# n=ser.in_waiting()
-		# if n: 
-		# # while(1):
-		# 	data2= str(binascii.b2a_hex(ser.read(24)))
-		# 	print(data2)
-		# 	# time.sleep(2)
 		
-		ser.close()
+				command = int(htcpl[4:6], 16)
+			
+				rest_length = pl+2
+				rest_data = ser.read(rest_length).hex()
+				print(rest_data)
+				if(command == 0x22):
+					rssi = int(rest_data[0:2], 16)
+					# print("Tag detected, rssi: %x" % rssi)
+					rssi = ~(0xFF^rssi)
+					print("Tag detected, rssi: %d" % rssi)
+				elif(command == 0xFF):
+					print("No tag detected.")
+				else:
+					print("error, flush current cache")
+					ser.flushInput()
 
 	except Exception as e:
+		ser.close()
+		stop_multi_read(ser)
 		print("Exception: ",e)
 
