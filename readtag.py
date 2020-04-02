@@ -61,16 +61,16 @@ if __name__ == '__main__':
 		ser=serial.Serial(port_reader, baud_rate, timeout=time_out)
 		print("\ndetailed information about the port:", ser)
 		
-		set_working_power(ser)
+		
 		set_working_region(ser)
 		set_working_power(ser)
+		# set_working_power(ser)
 
-		ser.flushInput()
+		
 
 		start_multi_read(ser)
-		
+		ser.flushInput()
 		# get_working_power(ser)
-
 
 		while(1):
 			if ser.in_waiting:
