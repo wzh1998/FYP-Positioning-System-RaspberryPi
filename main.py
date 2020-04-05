@@ -1,5 +1,5 @@
 # File: main.py
-# Author: Zihao Wang, He Wang
+# Author: Zihao Wang, He Wang, Meichen Lu, Jingxiang Sun
 # Usage: python3 main.py
 #
 # Copyright (c) 2020, UCD-FYP Group 12. All Rights Reserved.
