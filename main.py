@@ -16,19 +16,20 @@ import pymysql
 import time
 
 import db_connection
-card_list = ["e2000019651701720720d152",
-					"e200001d590a0130119067f9",
-					"e200001d590a007811802e0b",
-					"e2000019651701880720d132",
-					"0691",
-					"0692",
-					"0693"]
-# card_list = []
+# card_list = ["e2000019651701720720d152",
+# 					"e200001d590a0130119067f9",
+# 					"e200001d590a007811802e0b",
+# 					"e2000019651701880720d132",
+# 					"0691",
+# 					"0692",
+# 					"0693"]
+card_list = []
 active_card_list = []
 room_location = "Floor 1, Room 101"
 
 equip_list = ["EQ0001", "EQ0002", "EQ0003", "EQ0004", "EQ0005", 
-			"EQ0006", "EQ0007", "EQ0008", "EQ0009", "EQ0010"]
+			"EQ0006", "EQ0007", "EQ0008", "EQ0009", "EQ0010", 
+			"EQ0011", "EQ0012", "EQ0013", "EQ0014", "EQ0015", ]
 
 def Time_Current():
 	currentTime = time.strftime("%Y-%m-%d %H:%M:%S ",time.localtime(time.time()))
@@ -91,8 +92,7 @@ def dynamic_card_list(epc):
 	if(epc != None):
 		card_list.append(epc)
 		print("Found New Tag: %s, added to the system." % epc)
-		if (i not in active_card_list):
-				active_card_list.append(i)
+		active_card_list.append(len(card_list)-1)
 	return
 
 def set_working_region(ser):
