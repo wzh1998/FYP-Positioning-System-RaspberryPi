@@ -60,7 +60,7 @@ def SQL_Equipment_Update(equipID, location):
 		print("Log: Information of '%s' has been updated successfully on '%s'" % (equipID, location))
 	except:
 		# Rollback when error happens
-		print("Warning: Update failed at ..., please check the network connection.")
+		print("Warning: Update failed, please check the network connection.")
 		db.rollback()
 
 	# Close SQL connection
