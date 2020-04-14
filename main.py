@@ -11,25 +11,30 @@ import string
 import binascii
 import time
 import threading
-
 import pymysql
 import time
 
-import db_connection
-# card_list = ["e2000019651701720720d152",
-# 					"e200001d590a0130119067f9",
-# 					"e200001d590a007811802e0b",
-# 					"e2000019651701880720d132",
-# 					"0691",
-# 					"0692",
-# 					"0693"]
+equip_list = []
 card_list = []
 active_card_list = []
+
 room_location = "Floor 1, Room 101"
 
-equip_list = ["EQ0001", "EQ0002", "EQ0003", "EQ0004", "EQ0005", 
-			"EQ0006", "EQ0007", "EQ0008", "EQ0009", "EQ0010", 
-			"EQ0011", "EQ0012", "EQ0013", "EQ0014", "EQ0015", ]
+def Read_Card_File():
+	with open('card_info.txt','r') as f:
+		line = f.readline().strip()
+		while line:
+			print("Card Loading: %s" % line)
+			card_list.append(line)
+			line = f.readline().strip()
+
+def Read_Equipment_File():
+	with open('equipment_info.txt','r') as f:
+		line = f.readline().strip()
+		while line:
+			print("Equipment Loading: %s" % line)
+			equip_list.append(line)
+			line = f.readline().strip()
 
 def Time_Current():
 	currentTime = time.strftime("%Y-%m-%d %H:%M:%S ",time.localtime(time.time()))
@@ -64,6 +69,7 @@ def SQL_Equipment_Update(equipID, location):
 	return
 
 def schdule_uploading():
+	Read_Equipment_File()
 	while(1):
 		print("Prepare uploading info to 39.108.231.244 database...")
 		for i in range(len(active_card_list)):
@@ -140,6 +146,8 @@ def set_sensitivity(ser):
 
 def listen_rfid():
 	try:
+		Read_Card_File()
+		
 
 		port_reader = "/dev/ttyUSB0"
 		baud_rate = 115200
@@ -183,7 +191,7 @@ def listen_rfid():
 		ser.close()
 		print("Exception: ",e)
 
-if __name__ == '__main__':
+def main():
 	threads = []
 
 	thread1 = threading.Thread(target=listen_rfid)
@@ -194,3 +202,7 @@ if __name__ == '__main__':
 
 	for t in threads:
 		t.start()
+
+if __name__ == '__main__':
+	main()
+	
