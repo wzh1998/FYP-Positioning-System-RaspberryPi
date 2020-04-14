@@ -1,11 +1,13 @@
 # FYP-Positioning-System-RaspberryPi
 ## Prerequisite
->     sudo pip3 install pymysql
-      sudo pip3 install pyserial
-
+> ```     
+> sudo pip3 install pymysql
+> sudo pip3 install pyserial
+> ```
 ## Usage
+> ``` 
 > python3 main.py
-
+> ```
 ## File
 + main.py: the multi-thread program to read card and upload to the database.
 + card_info.txt: store epc code of each card.
