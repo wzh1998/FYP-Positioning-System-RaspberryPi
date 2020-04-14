@@ -1,7 +1,7 @@
 # FYP-Positioning-System-RaspberryPi
 ## Prerequisite
-> sudo pip3 install pymysql
-> sudo pip3 install pyserial
+>     sudo pip3 install pymysql
+      sudo pip3 install pyserial
 
 ## Usage
 > python3 main.py
